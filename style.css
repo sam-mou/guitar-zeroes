@@ -1,15 +1,38 @@
-div {
+.music-note {
     width: 400px;
     margin: 50px auto;
     background-color: black;
 }
 
+#game-board {
+    border: 2px solid black;
+    width: 40vw;
+    height: 95vh;
+    position: relative;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: end;
+    background-color: white;
+    padding: 2px
+}
+.keynote {
+    border: 1px solid red;
+
+    width: 5vw;
+    height: 5vh;
+}
+
 h1 {
-    text-align: center;
     color: white;
+    display: flex;
+    justify-content: flex-start;
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-align: center;
+    background-color: black;
 }

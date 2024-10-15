@@ -4,6 +4,14 @@
     background-color: black;
 }
 
+#score {
+    color: white;
+}
+
+#lives {
+    color: red;
+}
+
 #game-board {
     border: 2px solid black;
     width: 40vw;
@@ -24,8 +32,6 @@
 
 h1 {
     color: white;
-    display: flex;
-    justify-content: flex-start;
 }
 
 body {
@@ -35,4 +41,9 @@ body {
     align-items: center;
     text-align: center;
     background-color: black;
+}
+
+.stats {
+    display: flex;
+    flex-direction: column;
 }

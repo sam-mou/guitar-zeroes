@@ -1,7 +1,6 @@
 .music-note {
-    width: 400px;
-    margin: 50px auto;
-    background-color: black;
+    background-color: blue;
+    border-radius: 50%;
 }
 
 #score {
@@ -15,7 +14,7 @@
 #game-board {
     border: 2px solid black;
     width: 40vw;
-    height: 95vh;
+    height: 80vh;
     position: relative;
     display: flex;
     justify-content: space-evenly;
@@ -25,9 +24,9 @@
 }
 .keynote {
     border: 1px solid red;
-
     width: 5vw;
-    height: 5vh;
+    height: 5vw;
+    border-radius: 50%;
 }
 
 h1 {
@@ -47,3 +46,5 @@ body {
     display: flex;
     flex-direction: column;
 }
+    
+    

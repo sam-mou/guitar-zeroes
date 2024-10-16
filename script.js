@@ -1,21 +1,32 @@
 const allKey = document.querySelectorAll(".keynote");
 const resetButton = document.getElementById("resetButton");
 const gameBoard = document.querySelector("#game-board");
+
 const audio = document.getElementById("naive-music");
+const errorSound = document.getElementById("error-sound");
+const redSound = document.getElementById("red-sound");
+const greenSound = document.getElementById("green-sound");
+const blueSound = document.getElementById("blue-sound");
+const yellowSound = document.getElementById("yellow-sound");
+const gameOverSound = document.getElementById("game-over-sound");
+const youWinsound = document.getElementById("you-win-sound");
+
 const startButton = document.getElementById("startButton");
 const flammeImage = document.getElementById("flamme-image");
+const youWinScreen = document.getElementById("you-win-screen");
+const gameOverScreen = document.getElementById("game-over-screen");
+const guitarIcon = document.getElementById("guitar-icon");
 const buttonsImages = [
     "visualAssets/redButton.png",
     "visualAssets/greenButton.png",
     "visualAssets/blueButton.png",
     "visualAssets/yellowButton.png",
 ];
-const winMessage = document.getElementById("");
 const noteArray = [];
 let score = 0;
-let lives = 30;
+let lives = 5;
 let currentVelocity = 1;
-let increasedVelocity = 10;
+let increasedVelocity = 20;
 buttonVisibility();
 
 // Calculate positions relative to the game board width
@@ -33,6 +44,16 @@ function calculateGameBoardPositions() {
     return positionsArr;
 }
 
+// When current score + 20 we increase our music notes velocity to increase the game difficulty
+function increaseGameDifficulty() {
+    if (score >= increasedVelocity) {
+        noteArray.forEach(function (note) {
+            note.velocity += 0.3;
+        });
+        currentVelocity += 0.3;
+        increasedVelocity += 20;
+    }
+}
 
 // Class section
 class MusicNote {
@@ -85,7 +106,7 @@ function startGameIntervals() {
                 note.domElement.remove();
                 noteArray.splice(i, 1);
                 lives--;
-                console.log(lives);
+                errorSound.play();
                 gameOver()
             }
             updateScoreAndLives();
@@ -94,30 +115,54 @@ function startGameIntervals() {
 }
 
 
-
 // Game Over function
 function gameOver() {
     if (lives <= 0) {
         clearInterval(moveCreationInterval);
         clearInterval(noteCreationInterval);
-        alert("Game over! Strings broken.. Your final score is: " + score);
         audio.pause();
+        gameOverSound.play();
         hideStartButton();
         showResetButton();
+        document.getElementById("game-over-screen").style.display = "block";
+        noteArray.forEach(note => {
+            note.domElement.remove();
+        });
+        noteArray.length = 0;
     }
 }
+
+//Function win game
+function winGame() {
+    if (score >= 100) {
+        clearInterval(moveCreationInterval);
+        clearInterval(noteCreationInterval);
+        audio.pause();
+        youWinsound.play();
+        hideStartButton();
+        showResetButton();
+        document.getElementById("you-win-screen").style.display = "block";
+        noteArray.forEach(note => {
+            note.domElement.remove();
+        });
+        noteArray.length = 0;
+    }
+}
+
 
 // Reset variable to restart game
 function resetVariable() {
     noteArray.forEach(note => note.domElement.remove());
     noteArray.length = 0;
-    lives = 30;
+    lives = 5;
     score = 0;
     currentVelocity = 1;
     audio.play();
     updateScoreAndLives();
     clearInterval(moveCreationInterval);
     clearInterval(noteCreationInterval);
+    document.getElementById("game-over-screen").style.display = "none";
+    document.getElementById("you-win-screen").style.display = "none";
     hideResetButton();
 
     noteCreationInterval = setInterval(() => {
@@ -131,6 +176,7 @@ function resetVariable() {
                 note.domElement.remove();
                 noteArray.splice(i, 1);
                 lives--;
+                errorSound.play();
                 gameOver()
             }
             updateScoreAndLives();
@@ -181,23 +227,10 @@ function buttonVisibility() {
     hideResetButton();
 }
 
-//Function win game
-function winGame() {
-    clearInterval(moveCreationInterval);
-    clearInterval(noteCreationInterval);    
-    audio.pause();
-    hideStartButton();
-    hideResetButton();
-    winMessage;
-}
-
 // Score and lives display section
 function updateScoreAndLives() {
     document.getElementById("score").innerHTML = `Score: ${score}`;
     document.getElementById("lives").innerHTML = `Lives: ${lives}`;
-    if (score >= 100) {
-        wingame();
-    }
 }
 
 // When score +1 we display a green screen
@@ -212,16 +245,7 @@ function scoreWrong() {
 
 }
 
-// When current score + 5 we increase our music notes velocity to increase the game difficulty
-function increaseGameDifficulty() {
-    if (score >= increasedVelocity) {
-        noteArray.forEach(function (note) {
-            note.velocity += 0.2;
-        });
-        currentVelocity += 0.2;
-        increasedVelocity += 10;
-    }
-}
+
 
 
 // Add Event Listenner section
@@ -243,6 +267,8 @@ document.addEventListener('keydown', (e) => {
             musicNote.positionY >= yNegativeThreshold &&
             musicNote.positionY <= yThreshold) {
             musicNote.domElement.style.backgroundImage = `url(visualAssets/flamme.gif)`;
+
+            redSound.play();
             score++;
             keyMatched = true
             scoreCorrect();
@@ -253,9 +279,9 @@ document.addEventListener('keydown', (e) => {
             musicNote.positionY <= yThreshold) {
             musicNote.domElement.style.backgroundImage = `url(visualAssets/flamme.gif)`;
 
+            greenSound.play();
             score++;
             keyMatched = true
-
             scoreCorrect();
 
         } else if (e.code === 'ArrowDown' &&
@@ -264,9 +290,9 @@ document.addEventListener('keydown', (e) => {
             musicNote.positionY <= yThreshold) {
             musicNote.domElement.style.backgroundImage = `url(visualAssets/flamme.gif)`;
 
+            blueSound.play();
             score++;
             keyMatched = true
-
             scoreCorrect();
 
         } else if (e.code === 'ArrowRight' &&
@@ -275,9 +301,9 @@ document.addEventListener('keydown', (e) => {
             musicNote.positionY <= yThreshold) {
             musicNote.domElement.style.backgroundImage = `url(visualAssets/flamme.gif)`;
 
+            yellowSound.play();
             score++;
             keyMatched = true
-
             scoreCorrect();
         }
 
@@ -286,17 +312,30 @@ document.addEventListener('keydown', (e) => {
                 musicNote.domElement.remove();
             }, 1000);
             noteArray.splice(i, 1);
-            keyMatched = false
+            //keyMatched = false
         }
     });
+    winGame();
     if (keyMatched === false) {
         lives--;
+        errorSound.play();
     }
     increaseGameDifficulty();
     updateScoreAndLives();
     gameOver();
+
 });
 
 
+function activateEasterEgg() {
+    lives += 100;
+    score += 80;
+    updateScoreAndLives();
+    gameBoard.style.backgroundImage = "url('visualAssets/easter-egg-image.gif')"
+    audio.src = "visualAssets/easter-egg-song.mp3";
+    audio.play();
+}
+
+guitarIcon.addEventListener("click", activateEasterEgg);
 
 

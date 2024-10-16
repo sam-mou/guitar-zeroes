@@ -3,26 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guitar Zeroes</title>
+    <title>GUITAR ZEROES</title>
+    <link rel="icon" type="image/png" href="visualAssets/pixel-art-electric-guitar-icon.png">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <audio id="naive-music" src="/Naive.mp3"></audio>
 
 <div class="stats"> 
-        <h1>Guitar Zeroes</h1>
-<div id="score">Score: 0</div>
-<div id="lives">Lives: 3</div>
-<button id="resetButton">Hit Replay!</button>
-<button id="startButton">Let's Rock</button>
+    <div id="guitar-icon">
+        <img src="visualAssets/pixel-art-electric-guitar-icon.png">
+    </div>
+    <h1>GUITAR ZEROES</h1>
+<div id="score">SCORE: 0</div>
+<div id="lives">LIVES: 3</div>
+<button id="resetButton">
+    <img src="visualAssets/restart_button.png" alt="restart button image">
+</button>
+<button id="startButton">
+    <img src="visualAssets/start-button.png" alt="start button image">
+  </button>  
 </div>
+
+
+
     <div id="game-board">
-        <div class="keynote">⬅️</div>
-        <div class="keynote">⬆️</div>
-        <div class="keynote">⬇️</div>
-        <div class="keynote">➡️</div>  
+        <div class="keynote"><img src="visualAssets/arrowLeft-lightgrey.png" alt="Left Arrow"></div>
+        <div class="keynote"><img src="visualAssets/arrowUp-lightgrey.png" alt="Up Arrow"></div>
+        <div class="keynote"><img src="visualAssets/arrowDown-lightgrey.png" alt="Down Arrow"></div>
+        <div class="keynote"><img src="visualAssets/arrowRight-lightgrey.png" alt="Right Arrow"></div>
+        <img id="flamme-image" src="visualAssets/flamme.gif" alt="Animated flamme" style="display: none; width: 50px;">
+        </div>
         
     </div>
+    
 
     <script src="script.js"></script>
 </body>

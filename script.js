@@ -1,15 +1,22 @@
-console.log('Guitar Zeroes is working!');
-
 const allKey = document.querySelectorAll(".keynote");
 const resetButton = document.getElementById("resetButton");
 const gameBoard = document.querySelector("#game-board");
 const audio = document.getElementById("naive-music");
 const startButton = document.getElementById("startButton");
+const flammeImage = document.getElementById("flamme-image");
+const buttonsImages = [
+    "visualAssets/redButton.png",
+    "visualAssets/greenButton.png",
+    "visualAssets/blueButton.png",
+    "visualAssets/yellowButton.png",
+];
+const winMessage = document.getElementById("");
 const noteArray = [];
 let score = 0;
 let lives = 30;
 let currentVelocity = 1;
-let increasedVelocity = 5;
+let increasedVelocity = 10;
+buttonVisibility();
 
 // Calculate positions relative to the game board width
 function calculateGameBoardPositions() {
@@ -17,10 +24,10 @@ function calculateGameBoardPositions() {
     const gameBoardWidth = gameBoard.offsetWidth;
 
     const positionsArr = [
-        gameBoardWidth * 0.100,
-        gameBoardWidth * 0.325,
-        gameBoardWidth * 0.550,
-        gameBoardWidth * 0.775,
+        gameBoardWidth * 0.090,
+        gameBoardWidth * 0.300,
+        gameBoardWidth * 0.525,
+        gameBoardWidth * 0.750,
     ];
 
     return positionsArr;
@@ -32,12 +39,14 @@ class MusicNote {
     constructor() {
         this.width = 5;
         this.height = 5;
-        this.color = 'black';
-        const positionsArr = calculateGameBoardPositions();
 
-        this.positionX = positionsArr[Math.floor(Math.random() * positionsArr.length)];
-        this.positionY = 100;
+        this.column = Math.floor(Math.random() * 4);
+
+        const positionsArr = calculateGameBoardPositions();
+        this.positionX = positionsArr[this.column];
+        this.positionY = 74;
         this.domElement = null;
+        this.image = buttonsImages[this.column]
         this.createDomElement();
         this.velocity = currentVelocity;
     }
@@ -49,6 +58,7 @@ class MusicNote {
         this.domElement.style.height = this.height + "vw";
         this.domElement.style.left = this.positionX + "px";
         this.domElement.style.bottom = this.positionY + "vh";
+        this.domElement.style.backgroundImage = `url(${buttonsImages[this.column]})`
         this.domElement.style.position = "absolute";
         const note = document.getElementById("game-board");
         note.appendChild(this.domElement);
@@ -61,27 +71,28 @@ class MusicNote {
 
 
 // Interval section
-let noteCreationInterval = setInterval(() => {
-    noteArray.push(new MusicNote())
+function startGameIntervals() {
+    noteCreationInterval = setInterval(() => {
+        noteArray.push(new MusicNote())
 
-}, 1000);
+    }, 750);
 
-let moveCreationInterval = setInterval(() => {
-    noteArray.forEach((note, i) => {
-        note.moveDown();
-        //console.log(note);
+    moveCreationInterval = setInterval(() => {
+        noteArray.forEach((note, i) => {
+            note.moveDown();
 
+            if (note.positionY < -5) {
+                note.domElement.remove();
+                noteArray.splice(i, 1);
+                lives--;
+                console.log(lives);
+                gameOver()
+            }
+            updateScoreAndLives();
+        })
+    }, 15);
+}
 
-        if (note.positionY < -5) {
-            note.domElement.remove();
-            noteArray.splice(i, 1);
-            lives--;
-            console.log(lives);
-            gameOver()
-        }
-        updateScoreAndLives();
-    })
-}, 15);
 
 
 // Game Over function
@@ -90,8 +101,9 @@ function gameOver() {
         clearInterval(moveCreationInterval);
         clearInterval(noteCreationInterval);
         alert("Game over! Strings broken.. Your final score is: " + score);
-        audio.pause;
-        audio.currentTime = 0;
+        audio.pause();
+        hideStartButton();
+        showResetButton();
     }
 }
 
@@ -102,15 +114,15 @@ function resetVariable() {
     lives = 30;
     score = 0;
     currentVelocity = 1;
-    playSound;
-    audio.currentTime = 0;
+    audio.play();
     updateScoreAndLives();
     clearInterval(moveCreationInterval);
     clearInterval(noteCreationInterval);
+    hideResetButton();
 
     noteCreationInterval = setInterval(() => {
         noteArray.push(new MusicNote())
-    }, 1500);
+    }, 750);
 
     moveCreationInterval = setInterval(() => {
         noteArray.forEach((note, i) => {
@@ -129,17 +141,18 @@ function resetVariable() {
 
 // Start button
 const playSound = startButton.addEventListener("click", function () {
+    startGameIntervals()
     audio.play();
     audio.currentTime = 0;
-    audio.volume = 0.2;
-    console.log("Music started");
+    hideStartButton();
 });
 
 
 // Reset button
 resetButton.addEventListener("click", function () {
     resetVariable();
-    playSound;
+    audio.play();
+    audio.currentTime = 0;
 });
 
 // Hide reset button
@@ -152,44 +165,68 @@ function showResetButton() {
     resetButton.style.display = '';
 }
 
+// Show start button
+function showStartButton() {
+    startButton.style.display = '';
+}
+
+// Hide start button
+function hideStartButton() {
+    startButton.style.display = 'none';
+}
+
+// Button visibility on home page
+function buttonVisibility() {
+    showStartButton();
+    hideResetButton();
+}
+
+//Function win game
+function winGame() {
+    clearInterval(moveCreationInterval);
+    clearInterval(noteCreationInterval);    
+    audio.pause();
+    hideStartButton();
+    hideResetButton();
+    winMessage;
+}
 
 // Score and lives display section
 function updateScoreAndLives() {
     document.getElementById("score").innerHTML = `Score: ${score}`;
     document.getElementById("lives").innerHTML = `Lives: ${lives}`;
+    if (score >= 100) {
+        wingame();
+    }
 }
 
 // When score +1 we display a green screen
 function scoreCorrect() {
-    gameBoard.style.backgroundColor = "green"
     setTimeout(() => {
         gameBoard.style.backgroundColor = "white"
     }, 300)
 }
 
-// When lives -1 we display a red screen
+// When lives -1 we display a loose song
 function scoreWrong() {
-    gameBoard.style.backgroundColor = "red"
-    setTimeout(() => {
-        gameBoard.style.background = "white"
-    }, 300)
+
 }
 
 // When current score + 5 we increase our music notes velocity to increase the game difficulty
 function increaseGameDifficulty() {
     if (score >= increasedVelocity) {
         noteArray.forEach(function (note) {
-            note.velocity += 0.3;
+            note.velocity += 0.2;
         });
-        currentVelocity += 0.3;
-        increasedVelocity += 5;
+        currentVelocity += 0.2;
+        increasedVelocity += 10;
     }
 }
 
 
 // Add Event Listenner section
 document.addEventListener('keydown', (e) => {
-    let keyMatched = false;
+    let keyMatched = false
 
     // Get game board dimensions dynamically inside the event listener
     const gameBoard = document.getElementById('game-board');
@@ -202,54 +239,59 @@ document.addEventListener('keydown', (e) => {
 
     noteArray.forEach((musicNote, i) => {
         if (e.code === "ArrowLeft" &&
-            musicNote.positionX === gameBoardWidth * 0.100 &&
+            musicNote.positionX === gameBoardWidth * 0.090 &&
             musicNote.positionY >= yNegativeThreshold &&
             musicNote.positionY <= yThreshold) {
-
+            musicNote.domElement.style.backgroundImage = `url(visualAssets/flamme.gif)`;
             score++;
-            keyMatched = true;
+            keyMatched = true
             scoreCorrect();
 
         } else if (e.code === 'ArrowUp' &&
-            musicNote.positionX === gameBoardWidth * 0.325 &&
+            musicNote.positionX === gameBoardWidth * 0.300 &&
             musicNote.positionY >= yNegativeThreshold &&
             musicNote.positionY <= yThreshold) {
+            musicNote.domElement.style.backgroundImage = `url(visualAssets/flamme.gif)`;
 
             score++;
-            keyMatched = true;
+            keyMatched = true
+
             scoreCorrect();
 
         } else if (e.code === 'ArrowDown' &&
-            musicNote.positionX === gameBoardWidth * 0.550 &&
+            musicNote.positionX === gameBoardWidth * 0.525 &&
             musicNote.positionY >= yNegativeThreshold &&
             musicNote.positionY <= yThreshold) {
+            musicNote.domElement.style.backgroundImage = `url(visualAssets/flamme.gif)`;
 
             score++;
-            keyMatched = true;
+            keyMatched = true
+
             scoreCorrect();
 
         } else if (e.code === 'ArrowRight' &&
-            musicNote.positionX === gameBoardWidth * 0.775 &&
+            musicNote.positionX === gameBoardWidth * 0.750 &&
             musicNote.positionY >= yNegativeThreshold &&
             musicNote.positionY <= yThreshold) {
+            musicNote.domElement.style.backgroundImage = `url(visualAssets/flamme.gif)`;
 
             score++;
-            keyMatched = true;
+            keyMatched = true
+
             scoreCorrect();
         }
 
         if (keyMatched) {
-            musicNote.domElement.remove();
+            setTimeout(() => {
+                musicNote.domElement.remove();
+            }, 1000);
             noteArray.splice(i, 1);
+            keyMatched = false
         }
     });
-
     if (keyMatched === false) {
         lives--;
-        scoreWrong();
     }
-
-    console.log("Score: " + score + "Lives: " + lives);
     increaseGameDifficulty();
     updateScoreAndLives();
     gameOver();

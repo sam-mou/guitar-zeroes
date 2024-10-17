@@ -12,7 +12,7 @@ h1 {
 
 @font-face {
     font-family: pixel ;
-    src: url(visualAssets/Pixeled.ttf);
+    src: url('./visualAssets/Pixeled.ttf') format('truetype');
 }
 
 .stats {
@@ -166,7 +166,7 @@ body {
 
 @font-face {
     font-family: pixel ;
-    src: url(visualAssets/Pixeled.ttf);
+    src: url('./visualAssets/Pixeled.ttf') format('truetype');
 }
 
 

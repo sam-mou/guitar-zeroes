@@ -168,7 +168,7 @@ function resetVariable() {
     currentVelocity = 1;
     increasedVelocity = 20;
     gameBoard.style.backgroundImage = "url('visualAssets/Pixel-background-obsolete men.gif')";
-    naiveMusic.src = "/visualAssets/Naive.mp3";
+    naiveMusic.src = "visualAssets/Naive.mp3";
     naiveMusic.play();
     updateScoreAndLives();
     clearInterval(moveCreationInterval);

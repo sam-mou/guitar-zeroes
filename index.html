@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <audio id="naive-music" src="/Naive.mp3"></audio>
+    <audio id="naive-music" src="/visualAssets/Naive.mp3"></audio>
     <audio id="error-sound" src="/visualAssets/error-sound.mp3"></audio>
     <audio id="red-sound" src="/visualAssets/red-sound.mp3"></audio>
     <audio id="green-sound" src="/visualAssets/green-sound.mp3"></audio>
@@ -16,15 +16,16 @@
     <audio id="yellow-sound" src="/visualAssets/yellow-sound.mp3"></audio>
     <audio id="game-over-sound" src="/visualAssets/game-over-sound.mp3"></audio>
     <audio id="you-win-sound" src="/visualAssets/you-win-sound.wav"></audio>
-
+    <audio id="start-game-sound" src="/visualAssets/start-game-sound.mp3"></audio>
+    <audio id="streak-sound" src="/visualAssets/streak-sound.mp3"></audio>
 <div class="stats"> 
     <h1>GUITAR ZEROES</h1>
 
     <div id="guitar-icon">
         <img src="visualAssets/pixel-art-electric-guitar-icon.png">
     </div>
-<div id="score">SCORE: 0</div>
-<div id="lives">LIVES: 5</div>
+<div id="score">🔥 SCORE: 0</div>
+<div id="lives">❤️ LIVES: 5</div>
 <button id="resetButton">
     <img src="visualAssets/restart_button.png" alt="restart button image">
 </button>
@@ -36,6 +37,7 @@
 
 
     <div id="game-board">
+        <img id="start-screen" src="visualAssets/start-screen.gif" alt="Start Screen" style="display: block;">
         <div class="keynote"><img src="visualAssets/arrowLeft-lightgrey.png" alt="Left Arrow"></div>
         <div class="keynote"><img src="visualAssets/arrowUp-lightgrey.png" alt="Up Arrow"></div>
         <div class="keynote"><img src="visualAssets/arrowDown-lightgrey.png" alt="Down Arrow"></div>
@@ -43,6 +45,8 @@
         <img id="flamme-image" src="visualAssets/flamme.gif" alt="Animated flamme" style="display: none; width: 50px;">
         <img id="you-win-screen" src="visualAssets/you-win.gif" alt="Win Screen" style="display: none;">
         <img id="game-over-screen" src="visualAssets/GAME OVER.gif" alt="Game Over Screen" style="display: none;">
+        <div id="streak-message"></div>
+        <img id="music-off" src="visualAssets/music-on.svg" alt="Mute icon" style="display: block;">
         </div>
         
     </div>

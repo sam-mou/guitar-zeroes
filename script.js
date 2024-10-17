@@ -2,16 +2,24 @@ const allKey = document.querySelectorAll(".keynote");
 const resetButton = document.getElementById("resetButton");
 const gameBoard = document.querySelector("#game-board");
 
-const audio = document.getElementById("naive-music");
-const errorSound = document.getElementById("error-sound");
-const redSound = document.getElementById("red-sound");
-const greenSound = document.getElementById("green-sound");
-const blueSound = document.getElementById("blue-sound");
-const yellowSound = document.getElementById("yellow-sound");
-const gameOverSound = document.getElementById("game-over-sound");
-const youWinsound = document.getElementById("you-win-sound");
+let muted = false;
+const naiveMusic = document.getElementById("naive-music");
+
+const sounds = [
+    errorSound = document.getElementById("error-sound"),
+    redSound = document.getElementById("red-sound"),
+    greenSound = document.getElementById("green-sound"),
+    blueSound = document.getElementById("blue-sound"),
+    yellowSound = document.getElementById("yellow-sound"),
+    gameOverSound = document.getElementById("game-over-sound"),
+    youWinsound = document.getElementById("you-win-sound"),
+    startGameSound = document.getElementById("start-game-sound"),
+    streakSound = document.getElementById("streak-sound")
+]
+
 
 const startButton = document.getElementById("startButton");
+const startScreen = document.getElementById("start-screen")
 const flammeImage = document.getElementById("flamme-image");
 const youWinScreen = document.getElementById("you-win-screen");
 const gameOverScreen = document.getElementById("game-over-screen");
@@ -27,6 +35,7 @@ let score = 0;
 let lives = 5;
 let currentVelocity = 1;
 let increasedVelocity = 20;
+let consecutiveHits = 0;
 buttonVisibility();
 
 // Calculate positions relative to the game board width
@@ -90,7 +99,6 @@ class MusicNote {
     }
 }
 
-
 // Interval section
 function startGameIntervals() {
     noteCreationInterval = setInterval(() => {
@@ -120,7 +128,7 @@ function gameOver() {
     if (lives <= 0) {
         clearInterval(moveCreationInterval);
         clearInterval(noteCreationInterval);
-        audio.pause();
+        naiveMusic.pause();
         gameOverSound.play();
         hideStartButton();
         showResetButton();
@@ -137,7 +145,7 @@ function winGame() {
     if (score >= 100) {
         clearInterval(moveCreationInterval);
         clearInterval(noteCreationInterval);
-        audio.pause();
+        naiveMusic.pause();
         youWinsound.play();
         hideStartButton();
         showResetButton();
@@ -156,14 +164,21 @@ function resetVariable() {
     noteArray.length = 0;
     lives = 5;
     score = 0;
+    consecutiveHits = 0;
     currentVelocity = 1;
-    audio.play();
+    increasedVelocity = 20;
+    gameBoard.style.backgroundImage = "url('visualAssets/Pixel-background-obsolete men.gif')";
+    naiveMusic.src = "/visualAssets/Naive.mp3";
+    naiveMusic.play();
     updateScoreAndLives();
     clearInterval(moveCreationInterval);
     clearInterval(noteCreationInterval);
     document.getElementById("game-over-screen").style.display = "none";
     document.getElementById("you-win-screen").style.display = "none";
     hideResetButton();
+    showResetButton();
+
+
 
     noteCreationInterval = setInterval(() => {
         noteArray.push(new MusicNote())
@@ -186,19 +201,23 @@ function resetVariable() {
 
 
 // Start button
-const playSound = startButton.addEventListener("click", function () {
-    startGameIntervals()
-    audio.play();
-    audio.currentTime = 0;
+startButton.addEventListener("click", function () {
+    startScreen.style.display = "none";
+    startGameIntervals();
+    startGameSound.play();
+    naiveMusic.play();
+    naiveMusic.currentTime = 0;
     hideStartButton();
+    showResetButton();
 });
 
 
 // Reset button
 resetButton.addEventListener("click", function () {
     resetVariable();
-    audio.play();
-    audio.currentTime = 0;
+    startGameSound.play();
+    naiveMusic.play();
+    naiveMusic.currentTime = 0;
 });
 
 // Hide reset button
@@ -221,6 +240,15 @@ function hideStartButton() {
     startButton.style.display = 'none';
 }
 
+// Play intro sound
+
+window.addEventListener("load", function () {
+    const introSound = this.document.getElementById("intro-sound");
+    introSound.play();
+    console.log("music plays")
+});
+
+
 // Button visibility on home page
 function buttonVisibility() {
     showStartButton();
@@ -229,24 +257,21 @@ function buttonVisibility() {
 
 // Score and lives display section
 function updateScoreAndLives() {
-    document.getElementById("score").innerHTML = `Score: ${score}`;
-    document.getElementById("lives").innerHTML = `Lives: ${lives}`;
+    document.getElementById("score").innerHTML = `🔥 SCORE: ${score}`;
+    document.getElementById("lives").innerHTML = `❤️ LIVES: ${lives}`;
 }
 
-// When score +1 we display a green screen
-function scoreCorrect() {
+// Streak message
+function showStreakMessage(message) {
+    const streakMessage = document.getElementById('streak-message');
+    streakSound.play();
+    streakMessage.innerText = message;
+    streakMessage.style.display = 'block';
+
     setTimeout(() => {
-        gameBoard.style.backgroundColor = "white"
-    }, 300)
+        streakMessage.style.display = 'none';
+    }, 2000);
 }
-
-// When lives -1 we display a loose song
-function scoreWrong() {
-
-}
-
-
-
 
 // Add Event Listenner section
 document.addEventListener('keydown', (e) => {
@@ -271,7 +296,7 @@ document.addEventListener('keydown', (e) => {
             redSound.play();
             score++;
             keyMatched = true
-            scoreCorrect();
+
 
         } else if (e.code === 'ArrowUp' &&
             musicNote.positionX === gameBoardWidth * 0.300 &&
@@ -282,7 +307,7 @@ document.addEventListener('keydown', (e) => {
             greenSound.play();
             score++;
             keyMatched = true
-            scoreCorrect();
+
 
         } else if (e.code === 'ArrowDown' &&
             musicNote.positionX === gameBoardWidth * 0.525 &&
@@ -293,7 +318,7 @@ document.addEventListener('keydown', (e) => {
             blueSound.play();
             score++;
             keyMatched = true
-            scoreCorrect();
+
 
         } else if (e.code === 'ArrowRight' &&
             musicNote.positionX === gameBoardWidth * 0.750 &&
@@ -304,20 +329,28 @@ document.addEventListener('keydown', (e) => {
             yellowSound.play();
             score++;
             keyMatched = true
-            scoreCorrect();
+
         }
 
         if (keyMatched) {
+            consecutiveHits++;
+            if (consecutiveHits === 10) {
+                lives++;
+                showStreakMessage("YOU ROCK! + 1 ❤️");
+                consecutiveHits = 0;
+            }
+
             setTimeout(() => {
                 musicNote.domElement.remove();
             }, 1000);
             noteArray.splice(i, 1);
-            //keyMatched = false
+
         }
     });
     winGame();
     if (keyMatched === false) {
         lives--;
+        consecutiveHits = 0;
         errorSound.play();
     }
     increaseGameDifficulty();
@@ -327,13 +360,38 @@ document.addEventListener('keydown', (e) => {
 });
 
 
+// AddEventListenner to my mute button
+document.getElementById('music-off').addEventListener('click', toggleMute);
+
+function toggleMute() {
+    muted = !muted;
+
+    if (muted) {
+        sounds.forEach(sound => {
+            sound.volume = 0;
+        });
+        naiveMusic.volume = 0;
+        document.getElementById('music-off').src = 'visualAssets/music-off.svg';
+    } else {
+        sounds.forEach(sound => {
+            sound.volume = 1;
+        });
+        naiveMusic.volume = 1;
+        document.getElementById('music-off').src = 'visualAssets/music-on.svg';
+    }
+}
+
+
+
+
 function activateEasterEgg() {
     lives += 100;
-    score += 80;
+    score += 90;
     updateScoreAndLives();
+
     gameBoard.style.backgroundImage = "url('visualAssets/easter-egg-image.gif')"
-    audio.src = "visualAssets/easter-egg-song.mp3";
-    audio.play();
+    naiveMusic.src = "visualAssets/easter-egg-song.mp3";
+    naiveMusic.play();
 }
 
 guitarIcon.addEventListener("click", activateEasterEgg);

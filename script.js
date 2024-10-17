@@ -377,6 +377,10 @@ function activateEasterEgg() {
     score += 90;
     updateScoreAndLives();
 
+    document.getElementById("you-win-screen").style.display = "none";
+    document.getElementById("game-over-screen").style.display = "none";
+    document.getElementById("start-screen").style.display = "none";
+
     gameBoard.style.backgroundImage = "url('visualAssets/easter-egg-image.gif')"
     naiveMusic.src = "visualAssets/easter-egg-song.mp3";
     naiveMusic.play();

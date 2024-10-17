@@ -240,15 +240,6 @@ function hideStartButton() {
     startButton.style.display = 'none';
 }
 
-// Play intro sound
-
-window.addEventListener("load", function () {
-    const introSound = this.document.getElementById("intro-sound");
-    introSound.play();
-    console.log("music plays")
-});
-
-
 // Button visibility on home page
 function buttonVisibility() {
     showStartButton();

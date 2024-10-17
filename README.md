@@ -4,6 +4,8 @@
 
 Mini game built with web technologies (html, css, javascript). This is my humble adaptation of guitar heroes. There is an easter egg hidden somewhere on the page, good luck! 🐣
 
+![This is a sneak peak](visualAssets/Guitar-Zeroes-Demo.gif)
+
 
 ## How to play
 

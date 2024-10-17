@@ -34,7 +34,7 @@ const noteArray = [];
 let score = 0;
 let lives = 5;
 let currentVelocity = 1;
-let increasedVelocity = 20;
+let increasedVelocity = 25;
 let consecutiveHits = 0;
 buttonVisibility();
 
@@ -60,7 +60,7 @@ function increaseGameDifficulty() {
             note.velocity += 0.3;
         });
         currentVelocity += 0.3;
-        increasedVelocity += 20;
+        increasedVelocity += 25;
     }
 }
 
@@ -166,7 +166,7 @@ function resetVariable() {
     score = 0;
     consecutiveHits = 0;
     currentVelocity = 1;
-    increasedVelocity = 20;
+    increasedVelocity = 25;
     gameBoard.style.backgroundImage = "url('visualAssets/Pixel-background-obsolete men.gif')";
     naiveMusic.src = "visualAssets/Naive.mp3";
     naiveMusic.play();
@@ -177,8 +177,6 @@ function resetVariable() {
     document.getElementById("you-win-screen").style.display = "none";
     hideResetButton();
     showResetButton();
-
-
 
     noteCreationInterval = setInterval(() => {
         noteArray.push(new MusicNote())
@@ -248,7 +246,7 @@ function buttonVisibility() {
 
 // Score and lives display section
 function updateScoreAndLives() {
-    document.getElementById("score").innerHTML = `🔥 SCORE: ${score}`;
+    document.getElementById("score").innerHTML = `🔥 SCORE: ${score}/100`;
     document.getElementById("lives").innerHTML = `❤️ LIVES: ${lives}`;
 }
 
@@ -340,7 +338,6 @@ document.addEventListener('keydown', (e) => {
     });
     winGame();
     if (keyMatched === false) {
-        lives--;
         consecutiveHits = 0;
         errorSound.play();
     }
@@ -374,7 +371,7 @@ function toggleMute() {
 
 
 
-
+// Easter egg 🐣
 function activateEasterEgg() {
     lives += 100;
     score += 90;
@@ -386,5 +383,3 @@ function activateEasterEgg() {
 }
 
 guitarIcon.addEventListener("click", activateEasterEgg);
-
-
